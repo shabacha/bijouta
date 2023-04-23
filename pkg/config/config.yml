@@ -2,7 +2,7 @@ database:
   user: root
   password: bijouta123
   net: tcp
-  addr: 172.22.0.2:3306
+  addr: mysql:3306
   dbname: bijouta
   allowNativePasswords: true
   params:
