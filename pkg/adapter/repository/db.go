@@ -26,11 +26,9 @@ func (r *dbRepository) Transaction(txFunc func(interface{}) (interface{}, error)
 		if p := recover(); p != nil {
 			log.Print("recover")
 			tx.Rollback()
-			panic(p)
 		} else if err != nil {
 			log.Print("rollback")
 			tx.Rollback()
-			panic("error")
 		} else {
 			err = tx.Commit().Error
 		}

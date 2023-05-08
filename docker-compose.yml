@@ -1,46 +1,54 @@
 version: '3'
 services:
-  bijouta:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 8888:8080
-    container_name: bijouta
-    environment:
-      DB_PORT: 3306
-      DB_HOST: mysql
-      DB_PASSWORD: bijouta123
-      DB_USERNAME: root
-      DB_DATABASE: bijouta
-    restart: always
-    networks:
-        - bijouta
+  # dam-api-server:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8887:8080
+  #   container_name: dam-api-server
+  #   environment:
+  #       DB_PORT: ${DB_PORT} 
+  #       DB_HOST: ${DB_HOST}
+  #       DB_PASSWORD: ${DB_PASSWORD}
+  #       DB_USERNAME: ${DB_USERNAME}
+  #       DB_NAME: ${DB_NAME}
+  #       SERVER_PORT: ${SERVER_PORT}
+  #       DB_PARSE_TIME: ${DB_PARSE_TIME}
+  #       DB_CHARSET: ${DB_CHARSET}
+  #       DB_NET: ${DB_NET}
+  #       DB_ALLOW_NATIVE_PASSWORDS: ${DB_ALLOW_NATIVE_PASSWORDS}
+  #   restart: always
   mysql:
-#    build: ./mysql/
     image: mysql:5.7
     environment:
-      MYSQL_DATABASE: bijouta
-      MYSQL_PASSWORD: bijouta123
-      MYSQL_ROOT_PASSWORD: bijouta123
-      TZ: UTC
+       MYSQL_DATABASE: bijouta
+       MYSQL_USER: bijouta
+       MYSQL_PASSWORD: bijouta123
+       MYSQL_ROOT_PASSWORD: bijouta123
+       TZ: UTC
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-time-zone=+01:00','--max_allowed_packet=512M']
-    volumes:
-      - ./var/lib/mysql:/var/lib/mysql
+    # volumes:
+    #   - ${MYSQL_PATH}:/var/lib/mysql
+      #- ./mysql_init/:/docker-entrypoint-initdb.d/
     networks:
-      - bijouta
-    restart: always
-  phpmyadmin:
-      image: phpmyadmin/phpmyadmin:5.0.2
-      environment:
-        - PMA_HOST=mysql
-        - UPLOAD_LIMIT= 500M
-      networks:
-        - bijouta
-      ports:
-        - "8002:80"
-      restart: always
+      - webinar
+    ports:
+      - "3306:3306"
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.0.2
+    environment:
+      - PMA_HOST=mysql
+    networks:
+      - webinar
+    ports:
+      - "7001:80"
+    depends_on:
+      - mysql
 networks:
-  bijouta:
-    driver: bridge
+  webinar:
+    external:
+      name: bijouta
+
+

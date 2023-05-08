@@ -12,7 +12,7 @@ func NewDB() *gorm.DB {
 		User:                 config.C.Database.User,
 		Passwd:               config.C.Database.Password,
 		Net:                  config.C.Database.Net,
-		Addr:                 config.C.Database.Addr,
+		Addr:                 "127.0.0.1:3306",
 		DBName:               config.C.Database.DBName,
 		AllowNativePasswords: config.C.Database.AllowNativePasswords,
 		Params: map[string]string{

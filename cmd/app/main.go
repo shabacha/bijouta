@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 	"github.com/shabacha/pkg/config"
 	"github.com/shabacha/pkg/domain/model"
 	"github.com/shabacha/pkg/infrastructure/datastore"
@@ -22,18 +22,18 @@ func main() {
 	}
 
 	defer sqlDB.Close()
-	err = db.AutoMigrate(&model.User{})
+	err = db.AutoMigrate(&model.User{}, &model.Product{}, &model.Category{})
 	if err != nil {
 		panic("failed to migrate database")
 	}
 
 	r := registry.NewRegistry(db)
 
-	e := echo.New()
-	e = router.NewRouter(e, r.NewAppController())
+	ro := gin.Default()
+	ro = router.NewRouter(ro, r.NewAppController())
 
 	fmt.Println("Server listen at http://localhost" + ":" + config.C.Server.Address)
-	if err := e.Start(":" + config.C.Server.Address); err != nil {
+	if err := ro.Run(":" + config.C.Server.Address); err != nil {
 		log.Fatalln(err)
 	}
 }
