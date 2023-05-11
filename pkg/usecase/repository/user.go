@@ -7,4 +7,5 @@ type UserRepository interface {
 	Create(u *model.User) (*model.User, error)
 	GetById(id int) (*model.User, error)
 	Update(u *model.User, id int) (*model.User, error)
+	Login(infos *model.LoginInput) (*model.User, error)
 }

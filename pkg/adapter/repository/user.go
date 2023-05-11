@@ -54,3 +54,7 @@ func (ur *userRepository) Update(u *model.User, id int) (*model.User, error) {
 	}
 	return u, nil
 }
+
+func (ur *userRepository) Login(infos *model.LoginInput) (*model.User, error) {
+	return nil, nil
+}

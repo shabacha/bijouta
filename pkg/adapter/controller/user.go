@@ -19,6 +19,7 @@ type User interface {
 	GetUser(c *gin.Context)
 	CreateUser(c *gin.Context)
 	UpdateUser(c *gin.Context)
+	Login(c *gin.Context)
 }
 
 func NewUserController(us usecase.User) User {
@@ -78,4 +79,8 @@ func (uc *userController) UpdateUser(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, u)
 	return
+}
+
+func (uc *userController) Login(ctx *gin.Context) {
+
 }

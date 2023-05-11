@@ -17,6 +17,7 @@ type User interface {
 	Create(u *model.User) (*model.User, error)
 	Get(id int) (*model.User, error)
 	Update(u *model.User, id int) (*model.User, error)
+	Login(infos *model.LoginInput) (*model.User, error)
 }
 
 func NewUserUsecase(r repository.UserRepository, d repository.DBRepository) User {
@@ -66,4 +67,7 @@ func (uu *userUsecase) Update(u *model.User, id int) (*model.User, error) {
 		return nil, err
 	}
 	return u, nil
+}
+func (uu *userUsecase) Login(infos *model.LoginInput) (*model.User, error) {
+	return nil, nil
 }
