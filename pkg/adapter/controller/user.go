@@ -6,6 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/shabacha/pkg/usecase/usecase"
+	util "github.com/shabacha/pkg/util/jwt"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/shabacha/pkg/domain/model"
 )
@@ -96,11 +98,26 @@ func (uc *userController) Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, err)
 		return
 	}
-	u, err := uc.userUsecase.Login(&params)
+	var u *model.User
+	user, err := uc.userUsecase.GetUserByUserName(u, params.Username)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
-	ctx.JSON(http.StatusOK, u)
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(params.Password))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	token, err := util.GenerateToken("../../pkg/util/jwt/private_key.pem")
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	ctx.JSON(http.StatusOK, &model.LoginResponse{
+		User:  user,
+		Token: token,
+	})
+
 	return
 }

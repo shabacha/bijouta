@@ -8,5 +8,5 @@ type UserRepository interface {
 	GetById(id int) (*model.User, error)
 	Update(u *model.User, id int) (*model.User, error)
 	Delete(id int) error
-	Login(infos *model.LoginInput) (*model.LoginResponse, error)
+	GetUserByUserName(u *model.User, username string) (*model.User, error)
 }
