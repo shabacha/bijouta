@@ -24,12 +24,12 @@ func NewRouter(r *gin.Engine, c controller.AppController) *gin.Engine {
 	categoryGroup.PUT("/:id", c.Category.UpdateCategory)
 	categoryGroup.DELETE("/:id", c.Category.DeleteCategory)
 	categoryGroup.POST("/create", c.Category.CreateCategory)
-	// productGroup := r.Group("/products")
-	// productGroup.POST("", func(context echo.Context) error { return c.Product.CreateProduct(context) })
-	// productGroup.GET("", func(context echo.Context) error { return c.Product.GetAllProducts(context) })
-	// productGroup.GET("/:id", func(context echo.Context) error { return c.Product.GetProduct(context) })
-	// productGroup.PUT("/:id", func(context echo.Context) error { return c.Product.UpdateProduct(context) })
-	// productGroup.DELETE("/:id", func(context echo.Context) error { return c.Product.DeleteProduct(context) })
+	productGroup := r.Group("/products")
+	productGroup.POST("", c.Product.CreateProduct)
+	productGroup.GET("", c.Product.GetProducts)
+	productGroup.GET("/:id", c.Product.GetProduct)
+	productGroup.PUT("/:id", c.Product.UpdateProduct)
+	productGroup.DELETE("/:id", c.Product.DeleteProduct)
 
 	return r
 }
