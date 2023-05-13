@@ -15,9 +15,12 @@ type User struct {
 	ConfirmedAt *time.Time `json:"confirmed_at"`
 }
 type LoginInput struct {
-	Username        string `json:"username" binding:"required"`
-	Password        string `json:"password" binding:"required"`
-	ConfirmPassword string `json:"confirm_password" binding:"required,eqfield=Password"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+type LoginResponse struct {
+	Token string `json:"token"`
+	User  *User  `json:"user"`
 }
 
 func (User) TableName() string { return "users" }

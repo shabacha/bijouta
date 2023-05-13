@@ -19,6 +19,7 @@ type User interface {
 	GetUser(c *gin.Context)
 	CreateUser(c *gin.Context)
 	UpdateUser(c *gin.Context)
+	DeleteUser(c *gin.Context)
 	Login(c *gin.Context)
 }
 
@@ -80,7 +81,26 @@ func (uc *userController) UpdateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, u)
 	return
 }
-
+func (uc *userController) DeleteUser(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	if err := uc.userUsecase.Delete(id); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "User deleted successfully"})
+	return
+}
 func (uc *userController) Login(ctx *gin.Context) {
-
+	var params model.LoginInput
+	if err := ctx.Bind(&params); err != nil {
+		ctx.JSON(http.StatusBadRequest, err)
+		return
+	}
+	u, err := uc.userUsecase.Login(&params)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, u)
+	return
 }

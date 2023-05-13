@@ -19,5 +19,5 @@ WORKDIR /app
 
 COPY --from=builder /build/bijouta .
 COPY --from=builder /build/pkg/config /app/config   
-
+COPY --from=builder /build/pkg/util/jwt /app/jwt
 CMD ["./bijouta"]

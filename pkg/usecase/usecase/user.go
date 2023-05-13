@@ -17,7 +17,8 @@ type User interface {
 	Create(u *model.User) (*model.User, error)
 	Get(id int) (*model.User, error)
 	Update(u *model.User, id int) (*model.User, error)
-	Login(infos *model.LoginInput) (*model.User, error)
+	Delete(id int) error
+	Login(infos *model.LoginInput) (*model.LoginResponse, error)
 }
 
 func NewUserUsecase(r repository.UserRepository, d repository.DBRepository) User {
@@ -68,6 +69,26 @@ func (uu *userUsecase) Update(u *model.User, id int) (*model.User, error) {
 	}
 	return u, nil
 }
-func (uu *userUsecase) Login(infos *model.LoginInput) (*model.User, error) {
-	return nil, nil
+func (uu *userUsecase) Delete(id int) error {
+	if err := uu.userRepository.Delete(id); err != nil {
+		return err
+	}
+	return nil
+}
+func (uu *userUsecase) Login(infos *model.LoginInput) (*model.LoginResponse, error) {
+	data, err := uu.dBRepository.Transaction(func(i interface{}) (interface{}, error) {
+		u, err := uu.userRepository.Login(infos)
+		if err != nil {
+			return nil, err
+		}
+		return u, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	result, ok := data.(*model.LoginResponse)
+	if !ok {
+		return nil, errors.New("data schema is invalid")
+	}
+	return result, nil
 }

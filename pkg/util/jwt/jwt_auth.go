@@ -1,6 +1,7 @@
 package util
 
 import (
+	"errors"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -30,9 +31,9 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 		}
 
 		splitToken := strings.Split(authHeader, "Bearer ")
-		publicKeyPath := "./jwt/public.pem"
+		publicKeyPath := "./jwtRS256.key.pub"
 		token := splitToken[1]
-		isValid, err := verifyToken(token, publicKeyPath)
+		isValid, err := ValidateToken(token, publicKeyPath)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -42,7 +43,7 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
-func verifyToken(token, publicKeyPath string) (bool, error) {
+func ValidateToken(token, publicKeyPath string) (bool, error) {
 	keyData, err := ioutil.ReadFile(publicKeyPath)
 	if err != nil {
 		return false, err
@@ -65,4 +66,24 @@ func verifyToken(token, publicKeyPath string) (bool, error) {
 	}
 
 	return true, nil
+}
+func GenerateToken(privateKeyPath string) (string, error) {
+	privateKeyData, err := ioutil.ReadFile(privateKeyPath)
+	if err != nil {
+		return "", err
+	}
+	privateKey, err := jwt.ParseRSAPrivateKeyFromPEMWithPassword(privateKeyData, "empreinte")
+	if err != nil {
+		return "", err
+	}
+	newToken := jwt.NewWithClaims(jwt.SigningMethodRS256, myClaims{})
+
+	// Set the signing key and sign the token
+	newTokenString, err := newToken.SignedString(privateKey)
+	if err != nil {
+		return "", errors.New("jwt token generation failed")
+	}
+
+	return newTokenString, nil
+
 }
