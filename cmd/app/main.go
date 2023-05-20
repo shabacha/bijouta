@@ -22,7 +22,7 @@ func main() {
 	}
 
 	defer sqlDB.Close()
-	err = db.AutoMigrate(&model.User{}, &model.Product{}, &model.Category{})
+	err = db.AutoMigrate(&model.User{}, &model.Product{}, &model.Category{}, &model.PromoCode{})
 	if err != nil {
 		panic("failed to migrate database")
 	}
