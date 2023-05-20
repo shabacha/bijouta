@@ -19,8 +19,9 @@ func NewRegistry(db *gorm.DB) Registry {
 
 func (r *registry) NewAppController() controller.AppController {
 	return controller.AppController{
-		User:     r.NewUserController(),
-		Category: r.NewCategoryController(),
-		Product:  r.NewProductController(),
+		User:      r.NewUserController(),
+		Category:  r.NewCategoryController(),
+		Product:   r.NewProductController(),
+		PromoCode: r.NewPromoCodeController(),
 	}
 }
