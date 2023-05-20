@@ -23,5 +23,6 @@ func (r *registry) NewAppController() controller.AppController {
 		Category:  r.NewCategoryController(),
 		Product:   r.NewProductController(),
 		PromoCode: r.NewPromoCodeController(),
+		Cart:      r.NewCartController(),
 	}
 }

@@ -5,4 +5,5 @@ type AppController struct {
 	Category  interface{ Category }
 	Product   interface{ Product }
 	PromoCode interface{ PromoCode }
+	Cart      interface{ Cart }
 }
