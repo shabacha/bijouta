@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/shabacha/pkg/adapter/controller"
 	util "github.com/shabacha/pkg/util/jwt"
@@ -9,6 +10,11 @@ import (
 func NewRouter(r *gin.Engine, c controller.AppController) *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	corsClient := cors.DefaultConfig()
+	corsClient.AllowAllOrigins = true
+	corsClient.AllowMethods = []string{"PUT", "PATCH", "GET", "POST", "OPTIONS", "DELETE", "HEAD"}
+	corsClient.AllowCredentials = true
+	r.Use(cors.New(corsClient))
 
 	userGroup := r.Group("/users", util.TokenAuthMiddleware())
 	userGroup.GET("", c.User.GetUsers)

@@ -101,7 +101,7 @@ func (uc *userController) Login(ctx *gin.Context) {
 	var u *model.User
 	user, err := uc.userUsecase.GetUserByUserName(u, params.Username)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(params.Password))
